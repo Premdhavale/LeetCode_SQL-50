@@ -1,16 +1,19 @@
-/*If the customer's preferred delivery date is the same as the order date, then the order is called immediate; otherwise, it is called scheduled.
+-- We define query quality as:
 
-The first order of a customer is the order with the earliest order date that the customer made. It is guaranteed that a customer has precisely one first order.
+-- The average of the ratio between query rating and its position.
 
-Write a solution to find the percentage of immediate orders in the first orders of all customers, rounded to 2 decimal places.*/
+-- We also define poor query percentage as:
 
+-- The percentage of all queries with rating less than 3.
 
-SELECT 
-ROUND(SUM(IF(min_order_date = min_customer_pref_delivery_date,1,0)*100)/ COUNT(min_order_date),2) AS immediate_percentage
-FROM 
-(SELECT delivery_id,
-customer_id,
-MIN(order_date) AS min_order_date,
-MIN(customer_pref_delivery_date) AS min_customer_pref_delivery_date
-FROM delivery
-GROUP BY customer_id) AS new_table
+-- Write a solution to find each query_name, the quality and poor_query_percentage.
+
+-- Both quality and poor_query_percentage should be rounded to 2 decimal places.
+
+-- Return the result table in any order.
+
+SELECT query_name,
+ROUND(AVG(rating/position),2) AS quality,
+ROUND(AVG(IF(rating < 3,1,0)*100),2) AS poor_query_percentage
+FROM queries
+GROUP BY query_name
